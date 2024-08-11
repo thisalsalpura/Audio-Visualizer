@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP3 Audio Graph</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+        }
+
+        h1 {
+            color: red;
+            font-family: 'Reggae One';
+        }
+
+        #audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 60px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #graphCanvas {
+            background-color: black;
+            margin: 15px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 5px;
+            display: none;
+        }
+
+        #audioPlayer{
+            margin-left: auto;
+            margin-right: auto;color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>MP3 Audio Graph</h1>
+
+    <div id="audio-controls">
+        <label for="mp3Input">Select an MP3 File</label>
+        <input type="file" accept="audio/mpeg" id="mp3Input" onchange="loadAudioGraph()">
+    </div>
+
+    <audio id="audioPlayer" controls style="display: none;"></audio>
+
+    <canvas id="graphCanvas" width="1200" height="200"></canvas>
+
+    <script>
+        const canvas = document.getElementById('graphCanvas');
+        const context = canvas.getContext('2d');
+
+        function drawAudioGraph(audioElement) {
+            const audioContext = new AudioContext();
+            const source = audioContext.createMediaElementSource(audioElement);
+            const analyser = audioContext.createAnalyser();
+
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function draw() {
+                analyser.getByteFrequencyData(dataArray);
+
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                const barWidth = (canvas.width / bufferLength) * 2;
+                let barHeight;
+                let x = 0;
+
+                for (let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i];
+
+                    context.fillStyle = 'rgb(166,75,250)';
+                    context.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+
+                    x += barWidth + 1;
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            draw();
+        }
+
+        function loadAudioGraph() {
+            const mp3Input = document.getElementById('mp3Input');
+            const audioPlayer = document.getElementById('audioPlayer');
+
+            const file = mp3Input.files[0];
+            const objectURL = URL.createObjectURL(file);
+
+            audioPlayer.src = objectURL;
+            audioPlayer.style.display = 'block';
+            document.getElementById('graphCanvas').style.display = 'block';
+
+            drawAudioGraph(audioPlayer);
+        }
+    </script>
+</body>
+</html>
