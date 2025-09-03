@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,14 @@
         @import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
 
         body {
-            font-family: Arial, sans-serif;
             text-align: center;
             background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            gap: 10px;
         }
 
         h1 {
@@ -20,10 +26,9 @@
 
         #audio-controls {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            margin: 60px;
         }
 
         input[type="file"] {
@@ -31,28 +36,29 @@
         }
 
         label {
-            background-color: #3498db;
             color: #fff;
+            font-family: 'Reggae One';
+            background-color: #3498db;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
         }
 
-        #graphCanvas {
-            background-color: black;
-            margin: 15px;
-            margin-left: auto;
-            margin-right: auto;
-            border-radius: 5px;
-            display: none;
+        #audioPlayer {
+            margin-top: 25px;
         }
 
-        #audioPlayer{
-            margin-left: auto;
-            margin-right: auto;color: #3498db;
+        #graphCanvas {
+            margin-top: 25px;
+            background-color: black;
+            height: auto;
+            width: 100%;
+            border-radius: 0px;
+            display: none;
         }
     </style>
 </head>
+
 <body>
     <h1>MP3 Audio Graph</h1>
 
@@ -120,4 +126,5 @@
         }
     </script>
 </body>
+
 </html>
